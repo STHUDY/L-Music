@@ -1,0 +1,1412 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>LZY-Music</title>
+    <meta charset="utf-8">
+    <link rel="icon" href="https://source.sober-up.cn/Img/Icon/LZY.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="https://source.sober-up.cn/Img/Icon/LZY.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=0.5,maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" type="text/css" href="https://source.sober-up.cn/Icon/Bootstarp/bootstrap-icons.css" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+
+        .Backgroud {
+            transition-property: all;
+            transition-delay: 0s;
+            transition-duration: 1.5s;
+            position: fixed;
+            top: 0;
+            opacity: 1;
+            z-index: -2;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.8) blur(35px);
+            transform: scale(1.175);
+        }
+
+        .Windows {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            bottom: 56px;
+        }
+
+        #MusicPlayer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 56px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #SearchDiv {
+            position: fixed;
+            top: 25px;
+            right: 60px;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        #SearchBox {
+            width: 158px;
+            height: 25px;
+        }
+
+        #Songlist {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            overflow-y: auto;
+            overflow-x: hidden;
+            border-bottom-width: 56px;
+            border-bottom-style: solid;
+            border-bottom-color: #2e3435;
+        }
+
+        #SongInfo {
+            position: absolute;
+            left: 25px;
+            height: calc(100% - 70px);
+            width: calc(50% - 30px);
+            overflow: hidden;
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-top: 56px;
+        }
+
+        #ScrollLyric {
+            position: absolute;
+            right: 25px;
+            height: calc(100% - 70px);
+            width: calc(50% - 30px);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            margin-top: 56px;
+        }
+
+        #SongInfo_img {
+            width: 36%;
+        }
+
+        #SongInfo_artist {
+            color: #cbc7c7;
+            margin-top: 5px;
+            text-align: center;
+            word-break: break-all;
+        }
+
+        #SongInfo_name {
+            color: white;
+            margin-bottom: 5px;
+            text-align: center;
+            word-break: break-all;
+        }
+
+        #MusicPlayer_playset {
+            height: 100%;
+            width: 160px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+
+        .Button_simple {
+            background-color: transparent;
+            border: 0;
+            font-size: 30px;
+            margin: 0;
+            padding: 0;
+            color: white;
+            margin-top: 5px;
+        }
+
+        #MusicPlayer_progress {
+            height: 100%;
+            width: calc(100% - 480px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-width: 160px
+        }
+
+        #MusicPlayer_progress:hover .Display_NoneProgressMusic {
+            display: block;
+        }
+
+        #Progress_up {
+            width: 100%;
+            height: 40%;
+            display: flex;
+            flex-direction: row;
+        }
+
+        #Progress_bottom {
+            width: 100%;
+            height: 10%;
+            overflow: hidden;
+        }
+
+        #bottom_progress {
+            height: 100%;
+            width: var(--progress-width);
+        }
+
+        #MusicPlayer_voice {
+            height: 100%;
+            width: 20%;
+            min-width: 140px;
+            max-width: 180px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #MusicPlayer_voice:hover .Display_NoneProgressVocie {
+            display: block;
+        }
+
+        #MusicPlayer_change {
+            height: 100%;
+            width: 60px;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+
+        .progress_background {
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            flex-direction: row;
+            border-top-left-radius: 25px;
+            border-top-right-radius: 25px;
+            border-bottom-left-radius: 25px;
+            border-bottom-right-radius: 25px;
+        }
+
+        .progress_progress {
+            background-color: #c2c2c2;
+            display: flex;
+            align-items: center;
+            flex-direction: row-reverse;
+            border-top-left-radius: 25px;
+            border-bottom-left-radius: 25px;
+        }
+
+        .progress_point {
+            position: fixed;
+            height: 13px !important;
+            width: 13px !important;
+            border-radius: 100%;
+            background-color: rgb(204, 224, 254);
+            margin-right: -6.5px;
+        }
+
+        #voice_bottom {
+            overflow: hidden;
+            width: calc(100% - 50px);
+            height: 10%;
+
+        }
+
+        #bottom_voice {
+            height: 100%;
+            width: var(--progress-width);
+        }
+
+        #voice_left {
+            height: 100%;
+            font-size: 30px;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1px;
+        }
+
+        #up_name {
+            color: white;
+            height: 100%;
+            width: calc(100% - 100px);
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        #up_time {
+            color: white;
+            user-select: none;
+            height: 100%;
+            width: 100px;
+            text-align: end;
+        }
+
+        .Songlist_button {
+            font-size: 24px;
+            border-right: 0;
+            border-top: 0;
+            border-bottom: 0;
+            margin-left: 2px;
+            background-color: transparent;
+            border-color: var(--Songlist_button-border-color);
+        }
+
+        .Songlist_button:hover {
+            color: #4b97b3 !important;
+        }
+
+        #MoveLyric {
+            position: fixed;
+            word-break: break-all;
+            left: var(--MoveLyric-left);
+            top: var(--MoveLyric-top);
+            background-color: transparent;
+            color: white;
+            z-index: 2;
+            font-size: 25px;
+            border: dashed 1px rgb(0 255 245 / 10%);
+            border-top-left-radius: 25px;
+            border-top-right-radius: 25px;
+            border-bottom-left-radius: 25px;
+            border-bottom-right-radius: 25px;
+            text-align: center;
+            padding: 50px 50px 50px 50px;
+            backdrop-filter: blur(0.618px);
+        }
+
+        #SearchBox_icon {
+            position: relative;
+            left: calc(100% - 19px);
+            bottom: 32px;
+            font-size: 24px;
+            color: rgb(210 241 219 / 90%);
+        }
+
+        #SearchBox_input {
+            width: 100%;
+            height: 100%;
+            border-color: rgb(228 170 160 / 30%);
+            background-color: rgb(237 254 255 / 15%);
+            color: #ffeb00;
+        }
+
+        #ScrollLyric_box {
+            width: 100%;
+            height: calc(100% - 112px);
+            text-align: center;
+            overflow-y: auto;
+            text-shadow: 0 0 2px #333333;
+        }
+
+        .Lyric_Text {
+            color: white;
+            word-break: break-all;
+            transition-duration: 0.25s;
+            transition-timing-function: linear;
+            transition-delay: 0s;
+            transition-property: all;
+        }
+
+        .Display_NoneProgressMusic {
+            display: none;
+        }
+
+        .Display_NoneProgressVocie {
+            display: none;
+        }
+
+        #Music_Player {
+            display: none;
+        }
+
+        #MusicPlayer_times {
+            height: 100%;
+            width: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        #times_mark {
+            font-size: 13px;
+            color: white;
+        }
+
+        #times_select {
+            appearance: none;
+            background: none;
+            border: 0;
+            color: white;
+            font-size: 20px;
+            margin-left: 2px;
+        }
+
+        #times_select option {
+            color: black
+        }
+
+        #times_select option:checked {
+            color: white;
+            background-color: rgb(77, 77, 77);
+        }
+
+        #MusicPlayer_loopset {
+            height: 100%;
+            width: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .Scrollbar-0::-webkit-scrollbar {
+            width: 0px;
+            height: 1px;
+        }
+
+        .Scrollbar-1::-webkit-scrollbar {
+            width: 10px;
+            height: 1px;
+        }
+
+        .Scrollbar-1::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            background-color: skyblue;
+            background-image: -webkit-linear-gradient(45deg,
+                    rgba(255, 255, 255, 0.2) 25%,
+                    transparent 25%,
+                    transparent 50%,
+                    rgba(255, 255, 255, 0.2) 50%,
+                    rgba(255, 255, 255, 0.2) 75%,
+                    transparent 75%,
+                    transparent);
+        }
+
+        .Scrollbar-1::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+            background: #ededed;
+            border-radius: 10px;
+        }
+
+        @media screen and (prefers-color-scheme: dark) {
+            .Backgroud {
+                filter: brightness(0.6) blur(50px);
+                transform: scale(1.25);
+            }
+
+            #ScrollLyric_box {
+                text-shadow: 0;
+            }
+
+            .progress_progress {
+                background-color: #8c8c8c;
+            }
+        }
+    </style>
+    <script src="https://source.sober-up.cn/JavaScript/Other/Cookie_use.js"></script>
+    <script src="https://source.sober-up.cn/JavaScript/Other/pinyin.js"></script>
+    <script src="https://source.sober-up.cn/JavaScript/Self/Axaj.js"></script>
+    <script src="https://source.sober-up.cn/JavaScript/Other/getimg.js"></script>
+    <script>
+        var Window_State = 0;
+        var Music_All_Time = 0;
+        var Music_Now_Time = 0;
+        var Music_Order_Yet = 0;
+        var Music_Play_Times = 1;
+        var Music_Loop_State = 0;
+        var Lyric_All_Line = 0;
+        var ScrollLyric_Yet = 0;
+        var Music_Clicked = false;
+        var Music_Player_PlayPause = false;
+        var Music_Player_Prepared = false;
+        var Music_Progress_Click = false;
+        var MoveLyric_Click = false;
+        var Lyric_Loaded = false;
+        var Lyric_Start = new Array;
+        var Lyric_Value = new Array;
+        var Lyric_End = new Array;
+        var Lyric_ShowArea = 0;
+        var search_lenght = 0;
+        var Music_VioceClose = false;
+        var Music_Name_Yet = "";
+        var Progress_Move_Type = "music";
+        var Time_Update_Progress = 0;
+        var Lock_Update_Progress = false;
+        // var Time_Update_Lryic = 0;
+        // var Lock_Update_Lryic = false;
+
+        //这里会传一个GET参数url字段返回当前的页面地址和参数
+        var Song_Url = "./function/SongList.php"
+
+        function Change_Window() {
+            var SongListWindow = document.getElementById("SongListWindow");
+            var SongPlayWindow = document.getElementById("SongPlayWindow");
+            var Playset_right = document.getElementById("Playset_right");
+            if (Window_State == 0) {
+                SongPlayWindow.style.display = "none";
+                SongListWindow.style.display = "block";
+                Playset_right.innerHTML = '<i class="bi bi-music-note-list"></i>';
+                // Get_SongList();
+                Window_State = 1;
+            } else if (Window_State == 1) {
+                SongListWindow.style.display = "none";
+                SongPlayWindow.style.display = "block";
+                Playset_right.innerHTML = '<i class="bi bi-boombox"></i>';
+                Window_State = 0;
+                Initialize(1);
+            }
+        }
+
+        function Change_Music_Times() {
+            var Music_Player = document.getElementById("Music_Player");
+            var times_select = document.getElementById("times_select");
+            var selected_option = times_select.options[times_select.selectedIndex].value;
+            Music_Play_Times = Number(selected_option);
+            Music_Player.playbackRate = Music_Play_Times;
+            var Timeout = setTimeout(function () {
+                setCookie("PlayTimes", selected_option, 30);
+            }, 0);
+        }
+
+        function Music_LoopSet() {
+            var loopset_botton = document.getElementById("loopset_botton");
+            if (Music_Loop_State == 0) {
+                loopset_botton.innerHTML = '<i class="bi bi-repeat-1"></i>';
+                Music_Loop_State = 1;
+            } else if (Music_Loop_State == 1) {
+                loopset_botton.innerHTML = '<i class="bi bi-shuffle"></i>';
+                Music_Loop_State = 2;
+            } else if (Music_Loop_State == 2) {
+                loopset_botton.innerHTML = '<i class="bi bi-sort-down-alt"></i>';
+                Music_Loop_State = 3;
+            } else if (Music_Loop_State == 3) {
+                loopset_botton.innerHTML = '<i class="bi bi-x-circle"></i>';
+                Music_Loop_State = 0;
+            }
+            var Timeout = setTimeout(function () {
+                setCookie("PlayType", String(Music_Loop_State), 30);
+            }, 0);
+        }
+
+        function Progress_Move(Touched = false) {
+            if (Music_Progress_Click == false) {
+                return false;
+            }
+            window.event.preventDefault();
+            if (Progress_Move_Type == "music") {
+                var bottom_progress = document.getElementById("bottom_progress");
+                var Progress_bottom = document.getElementById("Progress_bottom");
+                var progress_width = 0;
+                if (Touched == false) {
+                    var music_location = event.clientX - bottom_progress.offsetLeft;
+                    progress_width = music_location / Progress_bottom.clientWidth;
+                } else {
+                    var music_location = event.changedTouches[0].clientX - bottom_progress.offsetLeft;
+                    progress_width = music_location / Progress_bottom.clientWidth;
+                }
+                bottom_progress.style = "--progress-width:" + String(progress_width * 100) + "%";
+                if (Music_Player_Prepared == false) {
+                    return false;
+                }
+                var Music_Player = document.getElementById("Music_Player");
+                Music_Player.currentTime = progress_width * Music_All_Time;
+                Audio_NowPlaying();
+            }
+            if (Progress_Move_Type == "voice") {
+                var bottom_voice = document.getElementById("bottom_voice");
+                var voice_bottom = document.getElementById("voice_bottom");
+                var progress_width = 0;
+                if (Touched == false) {
+                    var voice_location = event.clientX - bottom_voice.offsetLeft;
+                    progress_width = voice_location / voice_bottom.clientWidth;
+                } else {
+                    var voice_location = event.changedTouches[0].clientX - bottom_voice.offsetLeft;
+                    progress_width = voice_location / voice_bottom.clientWidth;
+                }
+                bottom_voice.style = "--progress-width:" + String(progress_width * 100) + "%";
+                var Music_Player = document.getElementById("Music_Player");
+                var voice_left = document.getElementById("voice_left");
+                if (progress_width <= 0) {
+                    voice_left.innerHTML = '<i class="bi bi-volume-mute-fill"></i>';
+                    progress_width = 0;
+                } else if (progress_width > 0 && progress_width <= 0.3) {
+                    voice_left.innerHTML = '<i class="bi bi-volume-off-fill"></i>';
+                } else if (progress_width > 0.3 && progress_width <= 0.8) {
+                    voice_left.innerHTML = '<i class="bi bi-volume-down-fill"></i>';
+                } else if (progress_width > 0.8 && progress_width <= 1) {
+                    voice_left.innerHTML = '<i class="bi bi-volume-up-fill"></i>';
+                } else {
+                    progress_width = 1;
+                }
+                Music_Player.volume = progress_width;
+                Music_VioceClose = false;
+                var Timeout = setTimeout(function () {
+                    setCookie("MusicVolume", String(progress_width), 30);
+                }, 0);
+            }
+        }
+
+        function Close_Vioce() {
+            if (Music_VioceClose == false) {
+                var Music_Player = document.getElementById("Music_Player");
+                var bottom_voice = document.getElementById("bottom_voice");
+                voice_left.innerHTML = '<i class="bi bi-volume-mute-fill"></i>';
+                bottom_voice.style = "--progress-width:0%";
+                Music_Player.volume = 0;
+                Music_VioceClose = true;
+            } else {
+                Initialize(3)
+                Music_VioceClose = false;
+            }
+        }
+
+        function MoveLyric(Touched = false) {
+            var MoveLyric = document.getElementById("MoveLyric");
+            if (MoveLyric_Click == false) {
+                return false;
+            }
+            var lyric_locationLeft = 0;
+            var lyric_locationTop = 0;
+            if (Touched == false) {
+                lyric_locationLeft = event.clientX - (MoveLyric.clientWidth / 2);
+                lyric_locationTop = event.clientY - (MoveLyric.clientHeight / 2);
+            } else {
+                lyric_locationLeft = event.changedTouches[0].clientX - (MoveLyric.clientWidth / 2);
+                lyric_locationTop = event.changedTouches[0].clientY - (MoveLyric.clientHeight / 2);
+            }
+            var MoveLyricLeft = (lyric_locationLeft / document.body.clientWidth);
+            var MoveLyricTop = (lyric_locationTop / document.body.clientHeight);
+            MoveLyric.style = "--MoveLyric-left:" + String(MoveLyricLeft * 100) + "%;--MoveLyric-top:" + String(MoveLyricTop * 100) + "%;";
+            var Timeout = setTimeout(function () {
+                setCookie("MoveLyricX", String(MoveLyricLeft * 100), 30);
+                setCookie("MoveLyricY", String(MoveLyricTop * 100), 30);
+            }, 0);
+        }
+
+        function Time_Text(Time, Reverse = false) {
+            if (Reverse == false) {
+                var Text = "00:00";
+                Time = parseInt(Time);
+                if (Time < 10) {
+                    Text = "00:0" + String(Time);
+                } else {
+                    var Minute = parseInt(Time / 60);
+                    var Second = parseInt(Time - (Minute * 60));
+                    if (Minute < 10) {
+                        Text = "0" + String(Minute);
+                    } else {
+                        Text = String(Minute);
+                    }
+                    if (Second < 10) {
+                        Text = Text + ":0" + String(Second);
+                    } else {
+                        Text = Text + ":" + String(Second);
+                    }
+                }
+                return Text;
+            } else {
+                var Temp = 0;
+                var Minute = 0;
+                var Second = 0;
+                Temp = Time.indexOf(":");
+                if (Temp != -1) {
+                    Minute = Time.substring(0, Temp);
+                    Second = Time.substr(Temp + 1);
+                } else {
+                    Minute = 0;
+                    Second = Number(Time);
+                }
+                return (Number(Minute) * 60) + Number(Second);
+            }
+        }
+
+        function Change_Music_Play_State() {
+            var Music_Player = document.getElementById("Music_Player");
+            if (Music_Player_Prepared == false) {
+                var Yet_Music_Button = document.getElementById("Songlist_ButtonMusic" + String(Music_Order_Yet));
+                Yet_Music_Button.click();
+                return false;
+            }
+            if (Music_Player_PlayPause == true) {
+                Music_Player.pause();
+            } else {
+                Music_Player.play();
+            }
+        }
+
+        function Audio_MusicData() {
+            var Music_Player = document.getElementById("Music_Player");
+            var up_time = document.getElementById("up_time");
+            var bottom_progress = document.getElementById("bottom_progress");
+            Music_All_Time = Music_Player.duration;
+            Music_Now_Time = 0
+            up_time.innerHTML = "00:00/" + Time_Text(Music_All_Time);
+            Music_Player_Prepared = true;
+            bottom_progress.style = "--progress-width:0";
+            Music_Player.playbackRate = Music_Play_Times;
+            Music_Player.play()
+        }
+
+        function Audio_Play() {
+            var Playset_middle = document.getElementById("Playset_middle");
+            Playset_middle.innerHTML = '<i class="bi bi-pause-fill"></i>';
+            Music_Player_PlayPause = true;
+        }
+
+        function Audio_Pause() {
+            var Playset_middle = document.getElementById("Playset_middle");
+            Playset_middle.innerHTML = '<i class="bi bi-play-fill"></i>';
+            Music_Player_PlayPause = false;
+            Lock_Update_Progress = false;
+            Lock_Update_Lryic = false;
+        }
+
+        function Audio_NowPlaying() {
+            var Music_Player = document.getElementById("Music_Player");
+            var up_time = document.getElementById("up_time");
+            var bottom_progress = document.getElementById("bottom_progress");
+            var run = false;
+            Switch_Lyric();
+
+            function animates() {
+                const startTime = new Date();
+                Music_Now_Time = Music_Player.currentTime;
+                up_time.innerHTML = Time_Text(Music_Now_Time) + "/" + Time_Text(Music_All_Time);
+                var progress_width = Music_Now_Time / Music_All_Time;
+                bottom_progress.style = "--progress-width:" + String(progress_width * 100) + "%";
+                const endTime = new Date();
+                Time_Update_Progress = endTime - startTime;
+                if (!run) {
+                    run = true;
+                    setTimeout(function () {
+                        if (Lock_Update_Progress && run) {
+                            requestAnimationFrame(animates);
+                            run = false;
+                        }
+                    }, Time_Update_Progress);
+                }
+            }
+            if (!Lock_Update_Progress) {
+                animates();
+                Lock_Update_Progress = true;
+            }
+        }
+
+        function Audio_End() {
+            var Music_Player = document.getElementById("Music_Player");
+            if (Music_Loop_State == 1) {
+                var up_time = document.getElementById("up_time");
+                var bottom_progress = document.getElementById("bottom_progress");
+                var ScrollLyric_box = document.getElementById("ScrollLyric_box");
+                bottom_progress.style = "--progress-width:0";
+                up_time.innerHTML = "00:00/" + Time_Text(Music_All_Time);
+                ScrollLyric_box.scrollTop = 0;
+                Music_Player.play();
+            } else if (Music_Loop_State == 2) {
+                Rand_Next();
+            } else if (Music_Loop_State == 3) {
+                List_Next();
+            }
+        }
+
+        function Rand_Next() {
+            var Songlist_ButtonMusic = document.querySelectorAll("[id^=Songlist_ButtonMusic]");
+            var Rand_Number = Music_Order_Yet;
+            if (Songlist_ButtonMusic.length > 1) {
+                while (Rand_Number == Music_Order_Yet) {
+                    Rand_Number = parseInt(Math.random() * Songlist_ButtonMusic.length);
+                }
+            } else {
+                Rand_Number = 0;
+            }
+            var Next_Music_Button = document.getElementById("Songlist_ButtonMusic" + String(Rand_Number));
+            Next_Music_Button.click();
+        }
+
+        function List_Next() {
+            var Songlist_ButtonMusic = document.querySelectorAll("[id^=Songlist_ButtonMusic]");
+            var Next_Number = Music_Order_Yet + 1;
+            if (Next_Number >= Songlist_ButtonMusic.length) {
+                Next_Number = 0;
+            }
+            var Next_Music_Button = document.getElementById("Songlist_ButtonMusic" + String(Next_Number));
+            Next_Music_Button.click();
+        }
+
+        function Change_Music_Yet() {
+            var Yet_Music_Number = 0;
+            if (Music_Clicked == false && Music_Order_Yet == 0) {
+                var Songlist_ButtonMusic = document.querySelectorAll("[id^=Songlist_ButtonMusic]");
+                Yet_Music_Number = Songlist_ButtonMusic.length - 1;
+            } else {
+                if (Music_Order_Yet == 0) {
+                    var Songlist_ButtonMusic = document.querySelectorAll("[id^=Songlist_ButtonMusic]");
+                    Yet_Music_Number = Songlist_ButtonMusic.length - 1;
+                } else {
+                    Yet_Music_Number = Music_Order_Yet - 1;
+                }
+            }
+            var Yet_Music_Button = document.getElementById("Songlist_ButtonMusic" + String(Yet_Music_Number));
+            Yet_Music_Button.click();
+        }
+
+        function Change_Music_Next() {
+            if (Music_Clicked == false && Music_Order_Yet == 0) {
+                var Yet_Music_Button = document.getElementById("Songlist_ButtonMusic" + String(Music_Order_Yet));
+                Yet_Music_Button.click();
+                return false;
+            }
+            if (Music_Loop_State == 2) {
+                Rand_Next();
+            } else {
+                List_Next();
+            }
+        }
+
+        function Lyric_Analyse(Lyric_Address) {
+            var MoveLyric = document.getElementById("MoveLyric");
+            var ScrollLyric_box = document.getElementById("ScrollLyric_box");
+            var Temp_Order = Music_Order_Yet;
+            Lyric_Start = [];
+            Lyric_Value = [];
+            Lyric_End = [];
+            ScrollLyric_box.scrollTop = 0;
+            ScrollLyric_Yet = 0;
+            Lyric_All_Line = 0;
+            if (Lyric_Address == null || Lyric_Address == "null") {
+                MoveLyric.innerHTML = "此音乐没有歌词或者歌词未收集";
+                ScrollLyric_box.innerHTML = '<span id="Lyric_Order0" class="Lyric_Text">此音乐没有歌词或者歌词未收集</span>';
+                Lyric_Loaded = false;
+                return false;
+            }
+            AjaxRequest(decodeURIComponent(Lyric_Address), function (result) {
+                if (Temp_Order != Music_Order_Yet) {
+                    return false;
+                }
+                if (result == "null") {
+                    MoveLyric.innerHTML = "此音乐没有歌词或者歌词未收集";
+                    ScrollLyric_box.innerHTML = '<span id="Lyric_Order0" class="Lyric_Text">此音乐没有歌词或者歌词未收集</span>';
+                    return false;
+                }
+                var Lyric_Text = result;
+                var Lyric_Temp0 = Lyric_Text;
+                var Lyric_Temp1 = Lyric_Text;
+                var Lyric_Line = new Array;
+                while (Lyric_Temp0.indexOf("[") != -1) {
+                    Lyric_Temp0 = Lyric_Temp0.replace("[", "")
+                    Lyric_All_Line++
+                }
+                var Line_Temp0 = 0;
+                var Line_Temp1 = 0;
+                var Line_Temp2 = "";
+                for (let i = 0; i < Lyric_All_Line; i++) {
+                    Line_Temp0 = Lyric_Temp1.indexOf("[");
+                    Line_Temp1 = Lyric_Temp1.indexOf("[", Line_Temp0 + 1);
+                    if (Line_Temp1 != -1) {
+                        Line_Temp2 = Lyric_Temp1.substring(Line_Temp0, Line_Temp1);
+                        Line_Temp2 = Line_Temp2.replace(/\r/g, "");
+                        Line_Temp2 = Line_Temp2.replace(/\n/g, "");
+                        Lyric_Line[i] = Line_Temp2;
+                        Lyric_Temp1 = Lyric_Temp1.replace("[", "");
+                        Lyric_Temp1 = Lyric_Temp1.replace("]", "");
+                    } else {
+                        Lyric_Line[i] = Lyric_Temp1.substr(Line_Temp0);
+                    }
+                }
+                var Time_Start_Temp = 0;
+                var Time_End_Temp = 0;
+                var Order_Temp0 = 0;
+                var ScrollLyric_Lyric_Text = "";
+                for (let i = 0; i < Lyric_Line.length; i++) {
+                    Line_Temp0 = Lyric_Line[i].indexOf("]");
+                    Time_Start_Temp = Lyric_Line[i].substring(1, Line_Temp0);
+                    Lyric_Start[i] = Time_Text(Time_Start_Temp, true);
+                    Lyric_Value[i] = Lyric_Line[i].substr(Line_Temp0 + 1);
+                    Order_Temp0 = i + 1;
+                    if (Order_Temp0 < Lyric_Line.length) {
+                        Line_Temp1 = Lyric_Line[Order_Temp0].indexOf("]");
+                        Time_End_Temp = Lyric_Line[Order_Temp0].substring(1, Line_Temp1);
+                    } else {
+                        Time_End_Temp = "End";
+                    }
+                    Lyric_End[i] = Time_Text(Time_End_Temp, true);
+                    if (Lyric_Value[i].replace(/ /g, "") != "") {
+                        ScrollLyric_Lyric_Text = ScrollLyric_Lyric_Text + '<span id="Lyric_Order' + String(i) + '" class="Lyric_Text">' + Lyric_Value[i] + '</span><br><br>';
+                    } else {
+                        ScrollLyric_Lyric_Text = ScrollLyric_Lyric_Text + '<span id="Lyric_Order' + String(i) + '" style="display:none">' + Lyric_Value[i] + '</span>';
+                    }
+                }
+                ScrollLyric_box.innerHTML = ScrollLyric_Lyric_Text;
+                MoveLyric.innerHTML = Lyric_Value[0];
+                var Lyric_First = document.getElementById("Lyric_Order0");
+                Lyric_First.style.color = '#04ebd6'
+                Lyric_First.style.fontWeight = "bold";
+                Lyric_Loaded = true;
+            }, function () {
+                MoveLyric.innerHTML = "此音乐没有歌词或者歌词未收集";
+                ScrollLyric_box.innerHTML = '<span id="Lyric_Order0" class="Lyric_Text">此音乐没有歌词或者歌词未收集</span>';
+                Lyric_Loaded = false;
+            });
+        }
+
+        function Switch_Lyric() {
+            var MoveLyric = document.getElementById("MoveLyric");
+            var ScrollLyric_box = document.getElementById("ScrollLyric_box");
+            for (let i = 0; i < Lyric_All_Line; i++) {
+                Lyric_End[Lyric_All_Line - 1] = Music_All_Time;
+                if (Music_Now_Time >= Lyric_Start[i] && Music_Now_Time < Lyric_End[i]) {
+                    if (Lyric_Value[i].replace(/ /g, "") != "") {
+                        MoveLyric.innerHTML = Lyric_Value[i];
+                        ScrollLyric_Lyric(i);
+                    }
+                    return false;
+                }
+            }
+        }
+
+        function ScrollLyric_Lyric(Order) {
+            if (Order == ScrollLyric_Yet || Lyric_Loaded == false) {
+                return false;
+            }
+            var Lyric_Now = document.getElementById("Lyric_Order" + String(Order));
+            var Lyric_Yet = document.getElementById("Lyric_Order" + String(ScrollLyric_Yet));
+            var ScrollLyric_box = document.getElementById("ScrollLyric_box");
+            var Lyric_Location = Lyric_Now.offsetTop;
+            var Yet_Location = Lyric_Yet.offsetTop;
+            Lyric_Yet.style.color = 'white'
+            Lyric_Yet.style.fontWeight = "normal";
+            Lyric_Now.style.fontWeight = "bold";
+            var Next_Location = Lyric_Location - Lyric_ShowArea;
+            var Now_Location = ScrollLyric_box.scrollTop;
+            //var Lyric_FontSize = Number(ScrollLyric_box.style.fontSize.replace(/px/g, ""));
+            ScrollLyric_MoveYet_Area_Top = Yet_Location - (Lyric_ShowArea * 0.45);
+            ScrollLyric_MoveYet_Area_Bottom = Yet_Location + (Lyric_ShowArea * 0.45);
+            ScrollLyric_Box_Now_Location = Now_Location + Lyric_ShowArea;
+
+            //var Strat_Location = Yet_Location - Lyric_ShowArea;
+            var Order_Temp = Order;
+            if ((ScrollLyric_Box_Now_Location >= ScrollLyric_MoveYet_Area_Top && ScrollLyric_Box_Now_Location < ScrollLyric_MoveYet_Area_Bottom) == true || Music_Progress_Click == true) {
+                var Cut_Area = Next_Location - Now_Location;
+                var Cut_Temp = 35;
+                var Area_Slice = Cut_Area / Cut_Temp;
+
+                function animate() {
+                    if (Cut_Temp < 0 || Order_Temp != ScrollLyric_Yet) {
+                        //ScrollLyric_box.scrollTo(0, Next_Location);
+                        return false;
+                    }
+                    ScrollLyric_box.scrollTop = Next_Location - (Area_Slice * Cut_Temp);
+                    Cut_Temp = Cut_Temp - 1;
+                    setTimeout(function () {
+                        requestAnimationFrame(animate);
+                    }, 0);
+                }
+                requestAnimationFrame(animate);
+            }
+            Lyric_Now.style.color = '#04ebd6'
+            ScrollLyric_Yet = Order;
+        }
+
+        function Choose_Music(MusicFile, LyricFile = null, MusicOrder, NowButton, Img = null, Wither = "未知", Name = null) {
+            var Music_Player = document.getElementById("Music_Player");
+            if (MusicOrder != Music_Order_Yet && Music_Clicked == true) {
+                document.getElementById("Songlist_ButtonMusic" + String(Music_Order_Yet)).style.color = "#f5f5f5";
+            }
+            NowButton.style.color = "#34eeff";
+            Lyric_Loaded = false;
+            Music_Player.src = decodeURIComponent(MusicFile);
+            var up_name = document.getElementById("up_name");
+            var SongInfo_name = document.getElementById("SongInfo_name");
+            up_name.innerHTML = NowButton.innerHTML;
+            Music_Name_Yet = NowButton.innerHTML;
+            SongInfo_name.innerHTML = Music_Name_Yet;
+            Music_Order_Yet = MusicOrder;
+            Music_Clicked = true;
+            if (Img == null || Img == "null") {
+                get_music_img(decodeURIComponent(MusicFile));
+            } else {
+                Img = decodeURIComponent(Img);
+                if (Name == null) {
+                    Name = NowButton.innerHTML;
+                } else {
+                    Name = decodeURIComponent(Name);
+                }
+
+                Wither = decodeURIComponent(Wither);
+                document.getElementById('SongInfo_name').innerHTML = Name
+                document.getElementById('SongInfo_artist').innerHTML = "歌手:" + Wither;
+                document.getElementById('SongInfo_img').src = Img;
+                document.getElementById('BackgroudImg').src = Img;
+            }
+            Lyric_Analyse(LyricFile);
+            var Timeout = setTimeout(function () {
+                setCookie("YetPlay", String(MusicOrder), 30);
+            }, 0);
+        }
+
+        function Initialize(Type = 0) { //初始化函数
+            if (Type == 0) {
+                Lyric_ShowArea = document.getElementById("ScrollLyric_box").clientHeight * 0.45;
+                if (getCookie("YetPlay") != "") {
+                    Music_Order_Yet = Number(getCookie("YetPlay"));
+                }
+                if (getCookie("MoveLyricX") != "" || getCookie("MoveLyricY") != "") {
+                    var MoveLyric = document.getElementById("MoveLyric");
+                    MoveLyric.style = "--MoveLyric-left:" + String(Number(getCookie("MoveLyricX"))) + "%;--MoveLyric-top:" + String(Number(getCookie("MoveLyricY"))) + "%;";
+                }
+                if (getCookie("MusicVolume") != "") {
+                    var Music_Player = document.getElementById("Music_Player");
+                    var voice_left = document.getElementById("voice_left");
+                    var MusicVolume = Number(getCookie("MusicVolume"));
+                    var bottom_voice = document.getElementById("bottom_voice");
+                    if (MusicVolume <= 0) {
+                        voice_left.innerHTML = '<i class="bi bi-volume-mute-fill"></i>';
+                        MusicVolume = 0;
+                    } else if (MusicVolume > 0 && MusicVolume <= 0.3) {
+                        voice_left.innerHTML = '<i class="bi bi-volume-off-fill"></i>';
+                    } else if (MusicVolume > 0.3 && MusicVolume <= 0.8) {
+                        voice_left.innerHTML = '<i class="bi bi-volume-down-fill"></i>';
+                    } else if (MusicVolume > 0.8 && MusicVolume <= 1) {
+                        voice_left.innerHTML = '<i class="bi bi-volume-up-fill"></i>';
+                    } else {
+                        MusicVolume = 1;
+                    }
+                    bottom_voice.style = "--progress-width:" + String(MusicVolume * 100) + "%";
+                    Music_Player.volume = MusicVolume;
+
+                }
+                if (getCookie("PlayTimes") != "") {
+                    var times_select = document.getElementById("times_select");
+                    var select_options = times_select.options;
+                    var Play_Times = getCookie("PlayTimes");
+                    for (var i = 0; i < select_options.length; i++) {
+                        if (select_options[i].textContent == Play_Times) {
+                            select_options[i].selected = true;
+                            break;
+                        }
+                    }
+                    Music_Play_Times = Number(Play_Times);
+                }
+                if (getCookie("PlayType") != "") {
+                    Music_Loop_State = Number(getCookie("PlayType"));
+                    var loopset_botton = document.getElementById("loopset_botton");
+                    if (Music_Loop_State == 0) {
+                        loopset_botton.innerHTML = '<i class="bi bi-x-circle"></i>';
+                    } else if (Music_Loop_State == 1) {
+                        loopset_botton.innerHTML = '<i class="bi bi-repeat-1"></i>';
+                    } else if (Music_Loop_State == 2) {
+                        loopset_botton.innerHTML = '<i class="bi bi-shuffle"></i>';
+                    } else if (Music_Loop_State == 3) {
+                        loopset_botton.innerHTML = '<i class="bi bi-sort-down-alt"></i>';
+                    }
+                }
+            }
+            if (Type == 1) {
+                Lyric_ShowArea = document.getElementById("ScrollLyric_box").clientHeight * 0.45;
+                var Lyric_Now = document.getElementById("Lyric_Order" + String(ScrollLyric_Yet));
+                var ScrollLyric_box = document.getElementById("ScrollLyric_box");
+                var Lyric_Location = Lyric_Now.offsetTop;
+                var Next_Location = Lyric_Location - Lyric_ShowArea;
+                ScrollLyric_box.scrollTop = Next_Location;
+            }
+            if (Type == 3) {
+                if (getCookie("MusicVolume") != "") {
+                    var Music_Player = document.getElementById("Music_Player");
+                    var voice_left = document.getElementById("voice_left");
+                    var MusicVolume = Number(getCookie("MusicVolume"));
+                    var bottom_voice = document.getElementById("bottom_voice");
+                    if (MusicVolume <= 0) {
+                        voice_left.innerHTML = '<i class="bi bi-volume-mute-fill"></i>';
+                        MusicVolume = 0;
+                    } else if (MusicVolume > 0 && MusicVolume <= 0.3) {
+                        voice_left.innerHTML = '<i class="bi bi-volume-off-fill"></i>';
+                    } else if (MusicVolume > 0.3 && MusicVolume <= 0.8) {
+                        voice_left.innerHTML = '<i class="bi bi-volume-down-fill"></i>';
+                    } else if (MusicVolume > 0.8 && MusicVolume <= 1) {
+                        voice_left.innerHTML = '<i class="bi bi-volume-up-fill"></i>';
+                    } else {
+                        MusicVolume = 1;
+                    }
+                    bottom_voice.style = "--progress-width:" + String(MusicVolume * 100) + "%";
+                    Music_Player.volume = MusicVolume;
+
+                }
+                if (getCookie("PlayType") != "") {
+                    Music_Loop_State = Number(getCookie("PlayType"));
+                    var loopset_botton = document.getElementById("loopset_botton");
+                    if (Music_Loop_State == 0) {
+                        loopset_botton.innerHTML = '<i class="bi bi-x-circle"></i>';
+                    } else if (Music_Loop_State == 1) {
+                        loopset_botton.innerHTML = '<i class="bi bi-repeat-1"></i>';
+                    } else if (Music_Loop_State == 2) {
+                        loopset_botton.innerHTML = '<i class="bi bi-shuffle"></i>';
+                    } else if (Music_Loop_State == 3) {
+                        loopset_botton.innerHTML = '<i class="bi bi-sort-down-alt"></i>';
+                    }
+                }
+            }
+        }
+
+        function Get_SongList() {
+            var self_url = encodeURIComponent(window.location.href);
+            var song_list = new Array;
+            AjaxRequest(Song_Url + "?url=" + self_url, function (result) {
+                var temp = result;
+                var button_number = 0;
+                while (temp.indexOf("{") != -1) {
+                    temp = temp.replace("{", "");
+                    button_number++;
+                }
+                temp = result;
+                var button_line = new Array;
+                for (let index = 0; index < button_number; index++) {
+                    var start = temp.indexOf("{");
+                    var end = temp.indexOf("},");
+                    button_line[index] = temp.substring(start + 1, end);
+                    temp = temp.replace("{", "");
+                    temp = temp.replace("},", "");
+                }
+                var button_list = "";
+                var playid = -1;
+                for (let index = 0; index < button_number; index++) {
+                    var button = '<button class="Songlist_button" id="Songlist_ButtonMusic' + String(index) + '" style="display:block;color:#f5f5f5;--Songlist_button-border-color: #ffeb00;" onclick=Choose_Music(\'';
+                    var temp_line = button_line[index];
+                    var temp_line_number = 0;
+                    while (temp_line.indexOf("&") != -1) {
+                        temp_line = temp_line.replace("&", "");
+                        temp_line_number++;
+                    }
+                    var type = new Array;
+                    temp_line = button_line[index];
+                    for (let indexs = 0; indexs < temp_line_number; indexs++) {
+                        var temp_name = temp_line.substring(1, temp_line.indexOf(":"));
+                        var temp_value = temp_line.substring(temp_line.indexOf(":") + 1, temp_line.indexOf("&"));
+                        temp_line = temp_line.substr(temp_line.indexOf("&") + 1);
+                        type[temp_name] = temp_value;
+                    }
+                    if (type["music"] == undefined) {
+                        continue;
+                    }
+                    button += type["music"] + "'";
+                    if (type["lyric"] == undefined || type["lyric"] == "null") {
+                        button += ",null";
+                    } else {
+                        button += ",'" + type["lyric"] + "'";
+                    }
+                    button += "," + String(index);
+                    button += ",this";
+                    if (type["image"] == undefined || type["image"] == "null") {
+                        button += ",null";
+                    } else {
+                        button += ",'" + type["image"] + "'";
+                    }
+                    if (type["author"] == undefined || type["author"] == "null") {
+                        button += ",'未知'";
+                    } else {
+                        button += ",'" + type["author"] + "'";
+                    }
+                    if (type["name"] == undefined || type["name"] == "null") {
+                        button += ",null";
+                    } else {
+                        button += ",'" + type["name"] + "'";
+                    }
+                    if (type["play"] == "true") {
+                        playid = index;
+                    }
+                    button += ')>';
+                    if (type["name"] == undefined) {
+                        button += decodeURIComponent(type["music"]);
+                    } else {
+                        button += decodeURIComponent(type["name"]);
+                        if (type["author"] != undefined) {
+                            button += " - " + decodeURIComponent(type["author"]);
+                        }
+                    }
+                    button += '</button>';
+                    button_list += button;
+                }
+                document.getElementById("Songlist").innerHTML = button_list;
+                if (playid != -1) {
+                    document.getElementById("Songlist_ButtonMusic" + String(playid)).click();
+                }
+                if (Music_Clicked == true) {
+                    var need_clicked_button = document.getElementById("Songlist_ButtonMusic" + String(Music_Order_Yet));
+                    if (need_clicked_button.innerHTML == Music_Name_Yet) {
+                        need_clicked_button.style.color = "rgb(52, 238, 255)";
+                    } else {
+                        Audio_End();
+                    }
+                }
+            });
+
+        }
+
+        function get_music_img(url) {
+            if (url.indexOf("http") == -1) {
+                if (url.substr(0, 1) == ".") {
+                    url = url.replace(".", "");
+                }
+                if (url.substr(0, 1) == "/") {
+                    url = url.replace("/", "");
+                }
+                var now_url = window.location.href;
+                url = now_url.substring(0, now_url.lastIndexOf("/") + 1) + url;
+            }
+            var Temp_Order = Music_Order_Yet;
+            document.getElementById('SongInfo_artist').innerHTML = "歌手:未知";
+            document.getElementById('SongInfo_img').src = "https://source.sober-up.cn/Img/MusicImg/temp.jpeg"
+            jsmediatags.read(url, {
+                onSuccess: function (tag) {
+                    if (Temp_Order != Music_Order_Yet) {
+                        return false;
+                    }
+                    tags = tag;
+                    var picture = tags.tags.picture;
+                    var artist = tags.tags.artist;
+                    var album = tags.tags.album;
+                    var title = tags.tags.title;
+                    if (picture == undefined) {
+                        document.getElementById('SongInfo_artist').innerHTML = "歌手:未知";
+                        document.getElementById('SongInfo_img').src = "https://source.sober-up.cn/Img/MusicImg/temp.jpeg";
+                        document.getElementById('BackgroudImg').src = "https://source.sober-up.cn/Img/MusicImg/bgimg.jpeg"
+                        return false;
+                    }
+                    var base64String = "";
+
+                    for (var i = 0; i < picture.data.length; i++) {
+                        base64String += String.fromCharCode(picture.data[i]);
+                    }
+                    var imageUri = "data:" + picture.format + ";base64," + window.btoa(base64String);
+                    document.getElementById('SongInfo_name').innerHTML = title
+                    document.getElementById('SongInfo_artist').innerHTML = "歌手:" + artist;
+                    document.getElementById('SongInfo_img').src = imageUri;
+                    document.getElementById('BackgroudImg').src = imageUri;
+                },
+                onError: function (error) {
+                    document.getElementById('SongInfo_img').src = "https://source.sober-up.cn/Img/MusicImg/temp.jpeg";
+                    document.getElementById('SongInfo_artist').innerHTML = "歌手:未知";
+                    document.getElementById('BackgroudImg').src = "https://source.sober-up.cn/Img/MusicImg/bgimg.jpeg";
+                }
+            });
+        }
+
+        function searchmusic() {
+            songs = new Array
+            songs = document.querySelectorAll("[id^=Songlist_ButtonMusic]");
+            songs_number = songs.length;
+            search_need = document.getElementById("SearchBox_input").value.toLowerCase()
+            reduce_search = false;
+            if (search_need.length <= search_lenght) {
+                reduce_search = true;
+            }
+            search_lenght = search_need.length;
+            search_need = search_need.replace(" ", "")
+            self.setTimeout(function () {
+                for (ni = 0; ni < songs_number; ni++) {
+                    songs_element = document.getElementById("Songlist_ButtonMusic" + String(ni))
+                    if (songs_element.style.display == "none" && reduce_search == false) {
+                        continue;
+                    }
+                    songs_text = songs_element.innerHTML.toLowerCase().replace(" ", "")
+                    songs_pinyin = toPY(songs_text).pinyin.toLowerCase().replace(" ", "")
+                    songs_acronym = toPY(songs_text).acronym.toLowerCase().replace(" ", "")
+                    if (search_need != "") {
+                        if (songs_text.indexOf(search_need) == -1 && songs_pinyin.indexOf(search_need) == -1 && songs_acronym.indexOf(search_need) == -1) {
+                            songs_element.style.display = "none"
+                        } else {
+                            songs_element.style.display = "block"
+                        }
+                    } else {
+                        songs_element.style.display = "block"
+                    }
+                }
+            }, 0);
+        }
+    </script>
+</head>
+
+<body onmousemove="Progress_Move()" ontouchmove="Progress_Move(true)" onclick="Music_Progress_Click = false"
+    ontouchstart="Music_Progress_Click = true" ontouchend="Music_Progress_Click = false"
+    onmouseleave="Music_Progress_Click = false">
+    <div id="Background">
+        <!--背景-->
+        <img class="Backgroud" id="BackgroudImg" src="https://source.sober-up.cn/Img/MusicImg/bgimg.jpeg">
+    </div>
+    <div id="SongListWindow" class="Windows" style="display:none">
+        <!--歌词列表窗口-->
+        <div id="SearchDiv">
+            <!--搜索组件-->
+            <a class="Button_simple" href='./setup/background.html' target="_blank"
+                style="margin-right: 5px;font-size: 25px;margin-top: 8px;text-decoration: none;"><i
+                    class="bi bi-gear-fill"></i></a>
+            <div id="SearchBox">
+                <input id="SearchBox_input" autocomplete="off" oninput="searchmusic()" type="text">
+                <div id="SearchBox_icon" onclick="searchmusic()"><i class="bi bi-search"></i></div>
+            </div>
+        </div>
+        <button id="MoveLyric" onmousedown="MoveLyric_Click = true" onclick="MoveLyric_Click = false"
+            ontouchstart="MoveLyric_Click = true" onmouseleave="MoveLyric_Click = false"
+            ontouchend="MoveLyric_Click = false" onmousemove="MoveLyric(false)" ontouchmove="MoveLyric(true)"
+            style="--MoveLyric-left:75%;--MoveLyric-top:100px;">
+            <!--移动歌词-->
+            未播放音乐
+        </button>
+        <div id="Songlist" class="Scrollbar-1">
+            <!--歌曲列表-->
+        </div>
+    </div>
+    <div id="SongPlayWindow" class="Windows">
+        <!--音乐播放窗口-->
+        <div id="SongInfo">
+            <!--歌曲信息-->
+            <img id="SongInfo_img" src="https://source.sober-up.cn/Img/MusicImg/temp.jpeg">
+            <h2 id="SongInfo_name">未播放音乐</h2>
+            <p id="SongInfo_artist"></p>
+        </div>
+        <div id="ScrollLyric">
+            <!--滚动歌词-->
+            <div id="ScrollLyric_box" style="font-size:20px" class="Scrollbar-0">
+                <span id="Lyric_Order0" class="Lyric_Text">未播放音乐</span>
+            </div>
+        </div>
+    </div>
+    <div id="MusicPlayer">
+        <!--播放组件-->
+        <div id="MusicPlayer_playset">
+            <!--音乐控制条-->
+            <button id="Playset_left" onclick="Change_Music_Yet()" class="Button_simple"><i
+                    class="bi bi-skip-start-fill"></i></button>
+            <button id="Playset_middle" onclick="Change_Music_Play_State()" class="Button_simple"
+                style="margin-left: 2px;"><i class="bi bi-play-fill"></i></button>
+            <button id="Playset_end" onclick="Change_Music_Next()" class="Button_simple"><i
+                    class="bi bi-skip-end-fill"></i></i></button>
+        </div>
+        <div id="MusicPlayer_progress">
+            <!--音乐进度条-->
+            <div id="Progress_up">
+                <div id="up_name">未播放音乐</div>
+                <div id="up_time">00:00/00:00</div>
+            </div>
+            <div id="Progress_bottom" class="progress_background" onclick="Progress_Move()"
+                onmousedown="Music_Progress_Click = true;Progress_Move_Type = 'music'">
+                <div id="bottom_progress" class="progress_progress" style="--progress-width:0">
+                    <div id="progress_point" class="progress_point Display_NoneProgressMusic"
+                        ontouchstart="Music_Progress_Click = true" onmousedown="Music_Progress_Click = true"></div>
+                </div>
+            </div>
+        </div>
+        <div id="MusicPlayer_times">
+            <!--音乐倍速播放-->
+            <span id="times_mark"><b>✕</b></span>
+            <select id="times_select" onchange="Change_Music_Times()">
+                <option>0.1</option>
+                <option>0.3</option>
+                <option>0.5</option>
+                <option>0.8</option>
+                <option selected>1.0</option>
+                <option>1.2</option>
+                <option>1.5</option>
+                <option>2.0</option>
+                <option>3.0</option>
+                <option>5.0</option>
+                <option>8.0</option>
+            </select>
+        </div>
+        <div id="MusicPlayer_loopset">
+            <!--歌单循环方式-->
+            <button id="loopset_botton" onclick="Music_LoopSet()" class="Button_simple"><i
+                    class="bi bi-x-circle"></i></button>
+        </div>
+        <div id="MusicPlayer_voice" onmousemove="Progress_Move_Type = 'voice'"
+            ontouchmove="Progress_Move_Type = 'voice'">
+            <!--声音进度条-->
+            <div id="voice_left" onclick="Close_Vioce()"><i class="bi bi-volume-down-fill"></i></div>
+            <div id="voice_bottom" class="progress_background" onclick="Progress_Move()"
+                onmousedown="Music_Progress_Click = true;Progress_Move_Type = 'voice'">
+                <div id="bottom_voice" class="progress_progress" style="--progress-width:50%">
+                    <div id="voice_point" class="progress_point Display_NoneProgressVocie"
+                        ontouchstart="Music_Progress_Click = true" onmousedown="Music_Progress_Click = true"></div>
+                </div>
+            </div>
+        </div>
+        <div id="MusicPlayer_change">
+            <!--窗口切换按钮-->
+            <button id="Playset_right" onclick="Change_Window()" class="Button_simple" style="margin-top: 0;"><i
+                    class="bi bi-boombox"></i></button>
+        </div>
+        <audio id="Music_Player" onloadedmetadata="Audio_MusicData()" onplay="Audio_Play()" onpause="Audio_Pause()"
+            ontimeupdate="Audio_NowPlaying()" onended="Audio_End()"></audio>
+    </div>
+    <script>
+        Initialize();
+        window.onresize = function () {
+            Initialize(1);
+        }
+        document.addEventListener('visibilitychange', function () {
+            let pageVisibility = document.visibilityState
+            if (pageVisibility == 'visible') {
+                Initialize(1);
+                Audio_NowPlaying()
+            }
+        })
+        document.onkeydown = function (keydowned) {
+            var theEvent = window.event || keydowned;
+            var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+            //console.log(code);
+            if (code == 9) {
+                Change_Window()
+                return false;
+            }
+            if (Window_State == 1) {
+                document.getElementById("SearchBox_input").focus();
+            }
+            if (Window_State == 0) {
+                if (code == 32) {
+                    Change_Music_Play_State();
+                    return false;
+                } else if (code == 37) {
+                    music_player = document.getElementById('Music_Player')
+                    music_player.currentTime = music_player.currentTime - 5
+                    time_second = music_player.currentTime
+                    Music_Progress_Click = true
+                    Audio_NowPlaying()
+                    Music_Progress_Click = false
+                    return false
+                } else if (code == 39) {
+                    change_lrc_next = true
+                    music_player = document.getElementById('Music_Player')
+                    music_player.currentTime = music_player.currentTime + 5
+                    time_second = music_player.currentTime
+                    Music_Progress_Click = true
+                    Audio_NowPlaying()
+                    Music_Progress_Click = false
+                    return false
+                }
+            }
+        }
+        Get_SongList();
+    </script>
+</body>
+
+</html>
