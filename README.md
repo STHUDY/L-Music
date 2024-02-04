@@ -4,6 +4,11 @@
 若要使用该网页，请修改全局变量Song_Url（请使用查找功能找到）
 该文件会自动请求并解析后端传过来的数据
 
+```javascript
+//这里会传一个GET参数url字段返回当前的页面地址和参数
+var Song_Url = "./function/SongList.php"
+```
+
 数据展示:
 ```
 {|name:名称&|author:作者&|image:图片地址&|music:歌曲地址&|lyric:歌词地址&|}
