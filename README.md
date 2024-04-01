@@ -22,7 +22,7 @@ var Song_Url = "./function/SongList.php"
 自动播放设置：
 ```
 {|name:名称1&|author:作者&|image:图片地址&|music:歌曲地址1&|lyric:歌词地址1&|},
-{|name:名称2&|author:作者&|image:图片地址&|music:歌曲地址2&|lyric:歌词地址2&|play:true},
+{|name:名称2&|author:作者&|image:图片地址&|music:歌曲地址2&|lyric:歌词地址2&|play:true|},
 {|name:名称3&|author:作者&|image:图片地址&|music:歌曲地址3&|lyric:歌词地址3&|},
 ```
 设置play:true时，歌曲会自动播放，上面歌曲二将会在加载后尝试自动播放
