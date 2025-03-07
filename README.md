@@ -11,7 +11,7 @@ var Song_Url = "./function/SongList.php"
 
 数据展示:
 ```
-{|name:名称&|author:作者&|image:图片地址&|music:歌曲地址&|lyric:歌词地址&}
+{|name:名称&|author:作者&|image:图片地址&|music:歌曲地址&|lyric:歌词地址&},
 ```
 多个歌曲：
 ```
