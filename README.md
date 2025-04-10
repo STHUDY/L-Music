@@ -28,4 +28,5 @@ var Song_Url = "./function/SongList.php"
 设置play:true时，歌曲会自动播放，上面歌曲二将会在加载后尝试自动播放
 
 
-在线演示网站：https://person.sthudy.top/
+在线演示网站：~https://person.sthudy.top/~
+此播放器已集成到：https://music.sthudy.top/
